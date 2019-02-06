@@ -1,0 +1,36 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 15
+VisualStudioVersion = 15.0.27703.2042
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "CGIH04EVLM", "CGIH04EVLM\CGIH04EVLM.vcxproj", "{C1407563-595F-44A7-A8F1-2CC5008EBB53}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{277B2CA6-6C25-4C8E-81E0-8D22723A9C72}"
+	ProjectSection(SolutionItems) = preProject
+		CGIH04EVLM\main_prac01.cpp = CGIH04EVLM\main_prac01.cpp
+	EndProjectSection
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|x64 = Debug|x64
+		Debug|x86 = Debug|x86
+		Release|x64 = Release|x64
+		Release|x86 = Release|x86
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{C1407563-595F-44A7-A8F1-2CC5008EBB53}.Debug|x64.ActiveCfg = Debug|x64
+		{C1407563-595F-44A7-A8F1-2CC5008EBB53}.Debug|x64.Build.0 = Debug|x64
+		{C1407563-595F-44A7-A8F1-2CC5008EBB53}.Debug|x86.ActiveCfg = Debug|Win32
+		{C1407563-595F-44A7-A8F1-2CC5008EBB53}.Debug|x86.Build.0 = Debug|Win32
+		{C1407563-595F-44A7-A8F1-2CC5008EBB53}.Release|x64.ActiveCfg = Release|x64
+		{C1407563-595F-44A7-A8F1-2CC5008EBB53}.Release|x64.Build.0 = Release|x64
+		{C1407563-595F-44A7-A8F1-2CC5008EBB53}.Release|x86.ActiveCfg = Release|Win32
+		{C1407563-595F-44A7-A8F1-2CC5008EBB53}.Release|x86.Build.0 = Release|Win32
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {837C16C0-F408-4486-B306-3B7D128F7BBF}
+	EndGlobalSection
+EndGlobal
