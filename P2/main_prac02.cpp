@@ -106,7 +106,7 @@ void myData()
 
 	unsigned int indices[] = //orden en el que se dibujan los elementos en pantalla
 	{
-		0, 1, 2, 3, 4 //a partir del orden de aparicion es como se dibujan las figuras en pantalla
+		0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12//a partir del orden de aparicion es como se dibujan las figuras en pantalla
 	};
 
 	glGenVertexArrays(1, &VAO);
@@ -182,8 +182,8 @@ void display(void)
 	//glBindBuffer(GL_ARRAY_BUFFER, VBO);
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
 
-	glPointSize(5.0);
-	glDrawElements(GL_POLYGON, 4, GL_UNSIGNED_INT, 0);//(GL_POINTS,<numero de puntos>, <tipo>, 0) || (GL_LINES, <vertices en pares>, <tipo>, 0)
+	glPointSize(6.0);
+	glDrawElements(GL_TRIANGLES, 4, GL_UNSIGNED_INT, 0);//(GL_POINTS,<numero de puntos>, <tipo>, 0) || (GL_LINES, <vertices en pares>, <tipo>, 0)
 	//glDrawArrays(GL_POINTS, 0, 5);				//(GL_TRIANGLES, <Vertices en trios>, <tipo>, 0) usw. GL_POLYGON 
 
 
@@ -242,7 +242,7 @@ int main()
 
         // render
         // Backgound color
-        glClearColor(0.3f, 0.3f, 0.3f, 1.0f);
+        glClearColor(0.0f, 0.0f, 1.0f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT);
 
 		//Mi función de dibujo
