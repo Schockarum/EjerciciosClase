@@ -133,7 +133,7 @@ void display(void)
 	//CLASE AGREGAMOS EL ROTATE; (VIEW QUE AFECTA, GRADOS QUE ROTA EN RADIANES PERO CONVERTIMOS DESDE GRADOS, EL EJE EN EL QUE ROTA (X,Y,Z)) PARA ESTE CASO ROTAMOS EN Y
 	view = glm::rotate(view, glm::radians(angX), glm::vec3(0, 1, 0));
 	view = glm::rotate(view, glm::radians(angY), glm::vec3(1, 0, 0));
-	view = glm::scale(view, glm::vec3(1.5, 2.5, 1)); //CAMBIANDO EL TAMAÑO DE LA CABEZA
+	view = glm::scale(view, glm::vec3(1.5f, 2.5f, 1.0f)); //CAMBIANDO EL TAMAÑO DE LA CABEZA
 	// pass them to the shaders
 	projectionShader.setMat4("model", model);
 	projectionShader.setMat4("view", view);
@@ -142,37 +142,86 @@ void display(void)
 
 
 	glBindVertexArray(VAO);
-	projectionShader.setVec3("aColor", glm::vec3(1.0f, 0.0f, 0.0f)); //AQUI SE GENERA EL VECTOR EN RGB PARA PINTAR NUESTRO CUBO UNITARIO, CABEZA ROJA
+	projectionShader.setVec3("color", glm::vec3(1.0f, 0.0f, 0.0f)); //AQUI SE GENERA EL VECTOR EN RGB PARA PINTAR NUESTRO CUBO UNITARIO, CABEZA ROJA
 	glDrawArrays(GL_QUADS, 0, 24); //DIBUJAMOS EL CUBO ESCALADO
 	
 	//CUELLO
-	model = glm::translate(model, glm::vec3(0, -0.5, 0));
+	model = glm::translate(model, glm::vec3(0, -0.75, 0));
 	model = glm::scale(model, glm::vec3(0.5, 0.5, 1)); //HACEMOS UN "MODELO" ESCALADO
+	projectionShader.setVec3("color", glm::vec3(1.0f, 0.4f, 0.5f)); //AQUI SE GENERA EL VECTOR EN RGB PARA PINTAR NUESTRO CUBO UNITARIO
 	projectionShader.setMat4("model", model); //LE PASAMOS LOS DATOS DEL MODELO AL SHADER
-	projectionShader.setVec3("aColor", glm::vec3(1.0f, 0.4f, 0.5f)); //AQUI SE GENERA EL VECTOR EN RGB PARA PINTAR NUESTRO CUBO UNITARIO
 	glDrawArrays(GL_QUADS, 0, 24); //DIBUJAMOS EL CUBO ESCALADO
 
 	//TORSO
-	model = glm::translate(model = glm::mat4(1.0f), glm::vec3(0, -3.25, 0)); //COMO LAS MATRICES SON ACUMULATIVAS, AL VOLVER A DECLARAR MODEL USARIAMOS LAS COORDENADAS ANTERIORES, POR LO QUE MEJOR EL PRIMER PARÁMETRO REDIBUJAMOS LA FIGURA.
-	model = glm::scale(model, glm::vec3(4, 5, 1));
+	model = glm::translate(model = glm::mat4(1.0f), glm::vec3(0, -3.5, 0)); //COMO LAS MATRICES SON ACUMULATIVAS, AL VOLVER A DECLARAR MODEL USARIAMOS LAS COORDENADAS ANTERIORES, POR LO QUE MEJOR EL PRIMER PARÁMETRO REDIBUJAMOS LA FIGURA.
+	model = glm::scale(model, glm::vec3(4.0, 5.0, 1.0));
 	projectionShader.setMat4("model", model); //LE PASAMOS LOS DATOS DEL MODELO AL SHADER
-	projectionShader.setVec3("aColor", glm::vec3(0.0f, 0.0f, 1.0f)); //AQUI SE GENERA EL VECTOR EN RGB PARA PINTAR NUESTRO CUBO UNITARIO
+	projectionShader.setVec3("color", glm::vec3(0.0f, 0.0f, 1.0f)); //AQUI SE GENERA EL VECTOR EN RGB PARA PINTAR NUESTRO CUBO UNITARIO
 	glDrawArrays(GL_QUADS, 0, 24); //DIBUJAMOS EL CUBO ESCALADO
-	
+
 	//CINTURON
 	model = glm::translate(model = glm::mat4(1.0f), glm::vec3(0, -6.25, 0)); //COMO LAS MATRICES SON ACUMULATIVAS, AL VOLVER A DECLARAR MODEL USARIAMOS LAS COORDENADAS ANTERIORES, POR LO QUE MEJOR EL PRIMER PARÁMETRO REDIBUJAMOS LA FIGURA.
-	model = glm::scale(model, glm::vec3(4, 1, 1));
+	model = glm::scale(model, glm::vec3(4.0, 0.5, 1.0));
 	projectionShader.setMat4("model", model); //LE PASAMOS LOS DATOS DEL MODELO AL SHADER
-	projectionShader.setVec3("aColor", glm::vec3(0.5f, 0.2f, 0.1f)); //AQUI SE GENERA EL VECTOR EN RGB PARA PINTAR NUESTRO CUBO UNITARIO
+	projectionShader.setVec3("color", glm::vec3(1.0f, 1.0f, 0.0f)); //AQUI SE GENERA EL VECTOR EN RGB PARA PINTAR NUESTRO CUBO UNITARIO
 	glDrawArrays(GL_QUADS, 0, 24); //DIBUJAMOS EL CUBO ESCALADO
-	glBindVertexArray(0);
 
-	//PIERNA DERECHA FALTA MODIFICAR
-	model = glm::translate(model = glm::mat4(1.0f), glm::vec3(0, -6.25, 0)); //COMO LAS MATRICES SON ACUMULATIVAS, AL VOLVER A DECLARAR MODEL USARIAMOS LAS COORDENADAS ANTERIORES, POR LO QUE MEJOR EL PRIMER PARÁMETRO REDIBUJAMOS LA FIGURA.
-	model = glm::scale(model, glm::vec3(4, 1, 1));
+	//PIERNA DERECHA
+	model = glm::translate(model = glm::mat4(1.0f), glm::vec3(1.5, -8.0, 0)); //COMO LAS MATRICES SON ACUMULATIVAS, AL VOLVER A DECLARAR MODEL USARIAMOS LAS COORDENADAS ANTERIORES, POR LO QUE MEJOR EL PRIMER PARÁMETRO REDIBUJAMOS LA FIGURA.
+	model = glm::scale(model, glm::vec3(1.0, 3.0, 1.0));
 	projectionShader.setMat4("model", model); //LE PASAMOS LOS DATOS DEL MODELO AL SHADER
-	projectionShader.setVec3("aColor", glm::vec3(0.5f, 0.2f, 0.1f)); //AQUI SE GENERA EL VECTOR EN RGB PARA PINTAR NUESTRO CUBO UNITARIO
+	projectionShader.setVec3("color", glm::vec3(1.0f, 1.0f, 1.0f)); //AQUI SE GENERA EL VECTOR EN RGB PARA PINTAR NUESTRO CUBO UNITARIO
 	glDrawArrays(GL_QUADS, 0, 24); //DIBUJAMOS EL CUBO ESCALADO
+	
+	//ZAPATO DERECHO
+	model = glm::translate(model = glm::mat4(1.0f), glm::vec3(2.75, -9.75, 0)); //COMO LAS MATRICES SON ACUMULATIVAS, AL VOLVER A DECLARAR MODEL USARIAMOS LAS COORDENADAS ANTERIORES, POR LO QUE MEJOR EL PRIMER PARÁMETRO REDIBUJAMOS LA FIGURA.
+	model = glm::scale(model, glm::vec3(4.0, 0.5, 1.0));
+	projectionShader.setMat4("model", model); //LE PASAMOS LOS DATOS DEL MODELO AL SHADER
+	projectionShader.setVec3("color", glm::vec3(0.5f, 0.2f, 0.1f)); //AQUI SE GENERA EL VECTOR EN RGB PARA PINTAR NUESTRO CUBO UNITARIO
+	glDrawArrays(GL_QUADS, 0, 24); //DIBUJAMOS EL CUBO ESCALADO
+
+	//PIERNA IZQUIERDA
+	model = glm::translate(model = glm::mat4(1.0f), glm::vec3(-1.5, -8.0, 0)); //COMO LAS MATRICES SON ACUMULATIVAS, AL VOLVER A DECLARAR MODEL USARIAMOS LAS COORDENADAS ANTERIORES, POR LO QUE MEJOR EL PRIMER PARÁMETRO REDIBUJAMOS LA FIGURA.
+	model = glm::scale(model, glm::vec3(1.0, 3.0, 1.0));
+	projectionShader.setMat4("model", model); //LE PASAMOS LOS DATOS DEL MODELO AL SHADER
+	projectionShader.setVec3("color", glm::vec3(1.0f, 1.0f, 1.0f)); //AQUI SE GENERA EL VECTOR EN RGB PARA PINTAR NUESTRO CUBO UNITARIO
+	glDrawArrays(GL_QUADS, 0, 24); //DIBUJAMOS EL CUBO ESCALADO
+
+	//ZAPATO IZQUIERDO
+	model = glm::translate(model = glm::mat4(1.0f), glm::vec3(-2.75, -9.75, 0)); //COMO LAS MATRICES SON ACUMULATIVAS, AL VOLVER A DECLARAR MODEL USARIAMOS LAS COORDENADAS ANTERIORES, POR LO QUE MEJOR EL PRIMER PARÁMETRO REDIBUJAMOS LA FIGURA.
+	model = glm::scale(model, glm::vec3(4.0, 0.5, 1.0));
+	projectionShader.setMat4("model", model); //LE PASAMOS LOS DATOS DEL MODELO AL SHADER
+	projectionShader.setVec3("color", glm::vec3(0.5f, 0.2f, 0.1f)); //AQUI SE GENERA EL VECTOR EN RGB PARA PINTAR NUESTRO CUBO UNITARIO
+	glDrawArrays(GL_QUADS, 0, 24); //DIBUJAMOS EL CUBO ESCALADO
+
+	//BRAZO DERECHO
+	model = glm::translate(model = glm::mat4(1.0f), glm::vec3(3.5, -1.35, 0)); //COMO LAS MATRICES SON ACUMULATIVAS, AL VOLVER A DECLARAR MODEL USARIAMOS LAS COORDENADAS ANTERIORES, POR LO QUE MEJOR EL PRIMER PARÁMETRO REDIBUJAMOS LA FIGURA.
+	model = glm::scale(model, glm::vec3(3.0, 0.7, 1.0));
+	projectionShader.setMat4("model", model); //LE PASAMOS LOS DATOS DEL MODELO AL SHADER
+	projectionShader.setVec3("color", glm::vec3(0.0f, 1.0f, 0.0f)); //AQUI SE GENERA EL VECTOR EN RGB PARA PINTAR NUESTRO CUBO UNITARIO
+	glDrawArrays(GL_QUADS, 0, 24); //DIBUJAMOS EL CUBO ESCALADO
+
+	//ANTEBRAZO DERECHO
+	model = glm::translate(model = glm::mat4(1.0f), glm::vec3(4.75, -3.20, 0)); //COMO LAS MATRICES SON ACUMULATIVAS, AL VOLVER A DECLARAR MODEL USARIAMOS LAS COORDENADAS ANTERIORES, POR LO QUE MEJOR EL PRIMER PARÁMETRO REDIBUJAMOS LA FIGURA.
+	model = glm::scale(model, glm::vec3(0.5, 3.0, 1.0));
+	projectionShader.setMat4("model", model); //LE PASAMOS LOS DATOS DEL MODELO AL SHADER
+	projectionShader.setVec3("color", glm::vec3(1.0f, 0.0f, 1.0f)); //AQUI SE GENERA EL VECTOR EN RGB PARA PINTAR NUESTRO CUBO UNITARIO
+	glDrawArrays(GL_QUADS, 0, 24); //DIBUJAMOS EL CUBO ESCALADO
+
+	//BRAZO IZQUIERDO
+	model = glm::translate(model = glm::mat4(1.0f), glm::vec3(-3.5, -1.35, 0)); //COMO LAS MATRICES SON ACUMULATIVAS, AL VOLVER A DECLARAR MODEL USARIAMOS LAS COORDENADAS ANTERIORES, POR LO QUE MEJOR EL PRIMER PARÁMETRO REDIBUJAMOS LA FIGURA.
+	model = glm::scale(model, glm::vec3(3.0, 0.7, 1.0));
+	projectionShader.setMat4("model", model); //LE PASAMOS LOS DATOS DEL MODELO AL SHADER
+	projectionShader.setVec3("color", glm::vec3(0.0f, 1.0f, 0.0f)); //AQUI SE GENERA EL VECTOR EN RGB PARA PINTAR NUESTRO CUBO UNITARIO
+	glDrawArrays(GL_QUADS, 0, 24); //DIBUJAMOS EL CUBO ESCALADO
+
+	//ANTEBRAZO DERECHO
+	model = glm::translate(model = glm::mat4(1.0f), glm::vec3(-4.75, -3.20, 0)); //COMO LAS MATRICES SON ACUMULATIVAS, AL VOLVER A DECLARAR MODEL USARIAMOS LAS COORDENADAS ANTERIORES, POR LO QUE MEJOR EL PRIMER PARÁMETRO REDIBUJAMOS LA FIGURA.
+	model = glm::scale(model, glm::vec3(0.5, 3.0, 1.0));
+	projectionShader.setMat4("model", model); //LE PASAMOS LOS DATOS DEL MODELO AL SHADER
+	projectionShader.setVec3("color", glm::vec3(1.0f, 0.0f, 1.0f)); //AQUI SE GENERA EL VECTOR EN RGB PARA PINTAR NUESTRO CUBO UNITARIO
+	glDrawArrays(GL_QUADS, 0, 24); //DIBUJAMOS EL CUBO ESCALADO
+
 	glBindVertexArray(0);
 }
 
@@ -247,17 +296,17 @@ void my_input(GLFWwindow *window)
 {
     if(glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS)  //GLFW_RELEASE
         glfwSetWindowShouldClose(window, true);
-	if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS)
-		movX += 0.08f;
 	if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS)
+		movX += 0.08f;
+	if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS)
 		movX -= 0.08f;
-	if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS)
-		movY += 0.08f;
 	if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS)
+		movY += 0.08f;
+	if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS)
 		movY -= 0.08f;
-	if (glfwGetKey(window, GLFW_KEY_E) == GLFW_PRESS)
-		movZ -= 0.08f;
 	if (glfwGetKey(window, GLFW_KEY_Q) == GLFW_PRESS)
+		movZ -= 0.08f;
+	if (glfwGetKey(window, GLFW_KEY_E) == GLFW_PRESS)
 		movZ += 0.08f;
 	if (glfwGetKey(window, GLFW_KEY_LEFT) == GLFW_PRESS)
 		angX -= 0.5f;
