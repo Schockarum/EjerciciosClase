@@ -1,7 +1,36 @@
-/*---------------------------------------------------------*/
-/* ----------------   Práctica 5 --------------------------*/
-/*-----------------    2019-2   ---------------------------*/
-/*------------- Computación gráfica e interacción humano computadora ---------------*/
+/*----------------------------------------------------------------------------------
+-------------------------------- Práctica 5 ----------------------------------------
+---------------------------------- 2019-2 ------------------------------------------
+------------- Computación gráfica e interacción humano computadora -----------------
+------------------------ Esparza Vázquez Luis Mauricio -----------------------------
+-------------------------------- 311078343 -----------------------------------------
+---------------------------------- Gpo4 --------------------------------------------
+Visual Studio 2017
+
+
+Botones Cámara:
+W - Arriba
+A - Izquierda
+S - Abajo
+D - Derecha
+
+Q - Alejar
+E - Acercar
+
+Botones de Rotación:
+Flecha Izq : Rotar a la izquierda
+Flecha Der : Rotar a la derecha
+Flecha Arr : Rotar arriba
+Flecha Aba : Rotar abajo
+
+Botones de movimiento de Brazo:
+T : Hombro
+Y : Antebrazo
+U : Palma
+I : Dedos (todos)
+
+Shift izquierdo antes de cualquier botón regresa la rotación
+*/
 #include <glew.h>
 #include <glfw3.h>
 
