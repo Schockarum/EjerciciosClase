@@ -180,7 +180,7 @@ void display(void)
 
 	//HOMBRO
 	model = glm::rotate(model, glm::radians(angHom), glm::vec3(1.0f, 0.0f, 0.0f));
-	projectionShader.setVec3("aColor",glm::vec3(1,1,0)); //CUBO INICIAL, HOMBRO
+	projectionShader.setVec3("color",glm::vec3(1,1,0)); //CUBO INICIAL, HOMBRO
 	glDrawArrays(GL_QUADS,0,24);
 
 	//BICEP
@@ -188,7 +188,7 @@ void display(void)
 	modelTemp = model; //Hacemos checkpoint de la posición de esta figura
 	model = glm::scale(model, glm::vec3(2, 2, 2));
 	projectionShader.setMat4("model", model);
-	projectionShader.setVec3("aColor", glm::vec3(0.0f, 0.0f, 1.0f));
+	projectionShader.setVec3("color", glm::vec3(0.0f, 0.0f, 1.0f));
 	glDrawArrays(GL_QUADS, 0, 24);
 	model = modelTemp; //Regresamos la escala a la original (de valor unitario)
 	/*COMO LAS ESCALAS SON ACUMULATIVAS, HACEMOS UNA MATRIZ TEMPORAL PARA GUARDAR UNA ESCALA Y QUE PODAMOS TRABAJAR UNIFORMEMENTE 
@@ -201,66 +201,200 @@ void display(void)
 	//COMO VAMOS A HACER UNA "ARTICULACIÓN, NO NOS MOVEMOS AL CENTRO DE LA SIGUIENTE FIGURA, SÓLO AL PUNTO DONDE QUIERO MI PIVOTE Y DE AHÍ AL CENTRO DE LA FIGURA
 	//I.E.
 	model = glm::translate(model, glm::vec3(1, 0, 0)); //Nos trasladamos al final del bicep de largo 2 (como partimos de la mitad, el final está a 1) aquí queremos el pivote
-	model = glm::rotate(model, glm::radians(angCod), glm::vec3(0, 1, 0));
-	model = glm::translate(model, glm::vec3(1.5, 0, 0)); //Nos trasladamos al centro de la siguiente figura (antebrazo)
+	model = glm::rotate(model, glm::radians(-angCod), glm::vec3(0, 1, 0));
 	projectionShader.setMat4("model", model); //LE PASAMOS LOS DATOS DEL MODELO AL SHADER ANTES DEL CHECKPOINT
+	model = glm::translate(model, glm::vec3(1.5, 0, 0)); //Nos trasladamos al centro de la siguiente figura (antebrazo)
 	modelTemp = model; 
 	model = glm::scale(model, glm::vec3(3, 1.5, 1.5)); //HACEMOS UN "MODELO" ESCALADO
 	projectionShader.setMat4("model", model); //LE PASAMOS LOS DATOS DEL MODELO AL SHADER
-	projectionShader.setVec3("aColor", glm::vec3(1.0f, 0.0f, 0.0f)); //AQUI SE GENERA EL VECTOR EN RGB PARA PINTAR NUESTRO CUBO UNITARIO
+	projectionShader.setVec3("color", glm::vec3(1.0f, 0.0f, 0.0f)); //AQUI SE GENERA EL VECTOR EN RGB PARA PINTAR NUESTRO CUBO UNITARIO
 	glDrawArrays(GL_QUADS, 0, 24); //DIBUJAMOS EL CUBO ESCALADO
 	model = modelTemp;
 
 	//PALMA
 	model = glm::translate(model, glm::vec3(1.5, 0, 0));
 	model = glm::rotate(model, glm::radians(angPal), glm::vec3(1, 0, 0));
-	model = glm::translate(model, glm::vec3(0.5, 0, 0));
 	projectionShader.setMat4("model", model); //LE PASAMOS LOS DATOS DEL MODELO AL SHADER ANTES DEL CHECKPOINT
+	model = glm::translate(model, glm::vec3(0.5, 0, 0));
 	modelTemp = model;
 	model = glm::scale(model, glm::vec3(1, 1, 0.8)); //HACEMOS UN "MODELO" ESCALADO
 	projectionShader.setMat4("model", model); //LE PASAMOS LOS DATOS DEL MODELO AL SHADER
-	projectionShader.setVec3("aColor", glm::vec3(0.0f, 1.0f, 0.0f)); //AQUI SE GENERA EL VECTOR EN RGB PARA PINTAR NUESTRO CUBO UNITARIO
+	projectionShader.setVec3("color", glm::vec3(0.0f, 1.0f, 0.0f)); //AQUI SE GENERA EL VECTOR EN RGB PARA PINTAR NUESTRO CUBO UNITARIO
 	glDrawArrays(GL_QUADS, 0, 24); //DIBUJAMOS EL CUBO ESCALADO
-	model = modelTemp;
 
-	//PULGAR
+	model = modelTemp;
+	modelTemp2 = model; //Cuando acabe cada dedo, model = modelTemp2
+
+	//PULGAR PTE1
 	model = glm::translate(model, glm::vec3(-0.35, 0.5, 0));
 	model = glm::rotate(model, glm::radians(angPul), glm::vec3(1, 0, 0));
-	model = glm::translate(model, glm::vec3(0, 0.15, 0));
 	projectionShader.setMat4("model", model); //LE PASAMOS LOS DATOS DEL MODELO AL SHADER ANTES DEL CHECKPOINT
+	model = glm::translate(model, glm::vec3(0, 0.15, 0));
 	modelTemp = model;
-	modelTemp2 = model;
 	model = glm::scale(model, glm::vec3(0.3, 0.3, 0.3)); //HACEMOS UN "MODELO" ESCALADO
 	projectionShader.setMat4("model", model); //LE PASAMOS LOS DATOS DEL MODELO AL SHADER
-	projectionShader.setVec3("aColor", glm::vec3(1.0f, 0.0f, 1.0f)); //AQUI SE GENERA EL VECTOR EN RGB PARA PINTAR NUESTRO CUBO UNITARIO
+	projectionShader.setVec3("color", glm::vec3(1.0f, 0.0f, 1.0f)); //AQUI SE GENERA EL VECTOR EN RGB PARA PINTAR NUESTRO CUBO UNITARIO
 	glDrawArrays(GL_QUADS, 0, 24); //DIBUJAMOS EL CUBO ESCALADO
 	model = modelTemp;
 
 	//PULGAR PTE2
 	model = glm::translate(model, glm::vec3(0, 0.15, 0));
 	model = glm::rotate(model, glm::radians(angPul*0.7f), glm::vec3(1, 0, 0));
-	model = glm::translate(model, glm::vec3(0, 0.15, 0));
 	projectionShader.setMat4("model", model); //LE PASAMOS LOS DATOS DEL MODELO AL SHADER ANTES DEL CHECKPOINT
+	model = glm::translate(model, glm::vec3(0, 0.15, 0));
 	modelTemp = model;
 	model = glm::scale(model, glm::vec3(0.3, 0.3, 0.3)); //HACEMOS UN "MODELO" ESCALADO
 	projectionShader.setMat4("model", model); //LE PASAMOS LOS DATOS DEL MODELO AL SHADER
-	projectionShader.setVec3("aColor", glm::vec3(1.0f, 1.0f, 0.7f)); //AQUI SE GENERA EL VECTOR EN RGB PARA PINTAR NUESTRO CUBO UNITARIO
+	projectionShader.setVec3("color", glm::vec3(1.0f, 1.0f, 0.7f)); //AQUI SE GENERA EL VECTOR EN RGB PARA PINTAR NUESTRO CUBO UNITARIO
 	glDrawArrays(GL_QUADS, 0, 24); //DIBUJAMOS EL CUBO ESCALADO
-	model = modelTemp;
 
-	//INDICE
-	model = modelTemp2;
+	model = modelTemp2; //como acabamos el dedo, regresamos la referencia a la palma
+
+	//INDICE PTE1
 	model = glm::translate(model, glm::vec3(0.5, 0.38, 0));
 	model = glm::rotate(model, glm::radians(-angPul), glm::vec3(0, 1, 0));
-	model = glm::translate(model, glm::vec3(0.15, 0, 0));
 	projectionShader.setMat4("model", model); //LE PASAMOS LOS DATOS DEL MODELO AL SHADER ANTES DEL CHECKPOINT
+	model = glm::translate(model, glm::vec3(0.15, 0, 0));
 	modelTemp = model;
 	model = glm::scale(model, glm::vec3(0.3, 0.25, 0.3)); //HACEMOS UN "MODELO" ESCALADO
 	projectionShader.setMat4("model", model); //LE PASAMOS LOS DATOS DEL MODELO AL SHADER
-	projectionShader.setVec3("aColor", glm::vec3(0.5f, 0.4f, 1.0f)); //AQUI SE GENERA EL VECTOR EN RGB PARA PINTAR NUESTRO CUBO UNITARIO
+	projectionShader.setVec3("color", glm::vec3(0.5f, 0.4f, 1.0f)); //AQUI SE GENERA EL VECTOR EN RGB PARA PINTAR NUESTRO CUBO UNITARIO
 	glDrawArrays(GL_QUADS, 0, 24); //DIBUJAMOS EL CUBO ESCALADO
 	model = modelTemp;
 
+	//INDICE PTE2
+	model = glm::translate(model, glm::vec3(0.15, 0, 0));
+	model = glm::rotate(model, glm::radians(-angPul), glm::vec3(0, 1, 0));
+	projectionShader.setMat4("model", model); //LE PASAMOS LOS DATOS DEL MODELO AL SHADER ANTES DEL CHECKPOINT
+	model = glm::translate(model, glm::vec3(0.15, 0, 0));
+	modelTemp = model;
+	model = glm::scale(model, glm::vec3(0.3, 0.24, 0.27)); //HACEMOS UN "MODELO" ESCALADO
+	projectionShader.setMat4("model", model); //LE PASAMOS LOS DATOS DEL MODELO AL SHADER
+	projectionShader.setVec3("color", glm::vec3(0.4f, 0.3f, 0.9f)); //AQUI SE GENERA EL VECTOR EN RGB PARA PINTAR NUESTRO CUBO UNITARIO
+	glDrawArrays(GL_QUADS, 0, 24); //DIBUJAMOS EL CUBO ESCALADO
+	model = modelTemp;
+
+	//INDICE PTE3
+	model = glm::translate(model, glm::vec3(0.15, 0, 0));
+	model = glm::rotate(model, glm::radians(-angPul), glm::vec3(0, 1, 0));
+	projectionShader.setMat4("model", model); //LE PASAMOS LOS DATOS DEL MODELO AL SHADER ANTES DEL CHECKPOINT
+	model = glm::translate(model, glm::vec3(0.15, 0, 0));
+	modelTemp = model;
+	model = glm::scale(model, glm::vec3(0.3, 0.23, 0.24)); //HACEMOS UN "MODELO" ESCALADO
+	projectionShader.setMat4("model", model); //LE PASAMOS LOS DATOS DEL MODELO AL SHADER
+	projectionShader.setVec3("color", glm::vec3(0.4f, 0.3f, 0.9f)); //AQUI SE GENERA EL VECTOR EN RGB PARA PINTAR NUESTRO CUBO UNITARIO
+	glDrawArrays(GL_QUADS, 0, 24); //DIBUJAMOS EL CUBO ESCALADO
+	
+	model = modelTemp2; //Regresamos a la referencia de la palma
+
+	//MEDIO PTE1
+	model = glm::translate(model, glm::vec3(0.5, 0.12, 0));
+	model = glm::rotate(model, glm::radians(-angPul), glm::vec3(0, 1, 0));
+	projectionShader.setMat4("model", model); //LE PASAMOS LOS DATOS DEL MODELO AL SHADER ANTES DEL CHECKPOINT
+	model = glm::translate(model, glm::vec3(0.2, 0, 0));
+	modelTemp = model;
+	model = glm::scale(model, glm::vec3(0.4, 0.25, 0.3)); //HACEMOS UN "MODELO" ESCALADO
+	projectionShader.setMat4("model", model); //LE PASAMOS LOS DATOS DEL MODELO AL SHADER
+	projectionShader.setVec3("color", glm::vec3(1.0f, 0.5f, 0.3f)); //AQUI SE GENERA EL VECTOR EN RGB PARA PINTAR NUESTRO CUBO UNITARIO
+	glDrawArrays(GL_QUADS, 0, 24); //DIBUJAMOS EL CUBO ESCALADO
+	model = modelTemp;
+
+	//MEDIO PTE2
+	model = glm::translate(model, glm::vec3(0.2, 0, 0));
+	model = glm::rotate(model, glm::radians(-angPul), glm::vec3(0, 1, 0));
+	projectionShader.setMat4("model", model); //LE PASAMOS LOS DATOS DEL MODELO AL SHADER ANTES DEL CHECKPOINT
+	model = glm::translate(model, glm::vec3(0.2, 0, 0));
+	modelTemp = model;
+	model = glm::scale(model, glm::vec3(0.4, 0.24, 0.27)); //HACEMOS UN "MODELO" ESCALADO
+	projectionShader.setMat4("model", model); //LE PASAMOS LOS DATOS DEL MODELO AL SHADER
+	projectionShader.setVec3("color", glm::vec3(0.9f, 0.4f, 0.2f)); //AQUI SE GENERA EL VECTOR EN RGB PARA PINTAR NUESTRO CUBO UNITARIO
+	glDrawArrays(GL_QUADS, 0, 24); //DIBUJAMOS EL CUBO ESCALADO
+	model = modelTemp;
+
+	//MEDIO PTE3
+	model = glm::translate(model, glm::vec3(0.2, 0, 0));
+	model = glm::rotate(model, glm::radians(-angPul), glm::vec3(0, 1, 0));
+	projectionShader.setMat4("model", model); //LE PASAMOS LOS DATOS DEL MODELO AL SHADER ANTES DEL CHECKPOINT
+	model = glm::translate(model, glm::vec3(0.2, 0, 0));
+	modelTemp = model;
+	model = glm::scale(model, glm::vec3(0.4, 0.23, 0.24)); //HACEMOS UN "MODELO" ESCALADO
+	projectionShader.setMat4("model", model); //LE PASAMOS LOS DATOS DEL MODELO AL SHADER
+	projectionShader.setVec3("color", glm::vec3(0.8f, 0.3f, 0.1f)); //AQUI SE GENERA EL VECTOR EN RGB PARA PINTAR NUESTRO CUBO UNITARIO
+	glDrawArrays(GL_QUADS, 0, 24); //DIBUJAMOS EL CUBO ESCALADO
+	
+	model = modelTemp2; //REGRESAMOS A LA PALMA
+
+	//ANULAR PTE1
+	model = glm::translate(model, glm::vec3(0.5, -0.12, 0));
+	model = glm::rotate(model, glm::radians(-angPul), glm::vec3(0, 1, 0));
+	projectionShader.setMat4("model", model); //LE PASAMOS LOS DATOS DEL MODELO AL SHADER ANTES DEL CHECKPOINT
+	model = glm::translate(model, glm::vec3(0.15, 0, 0));
+	modelTemp = model;
+	model = glm::scale(model, glm::vec3(0.3, 0.25, 0.3)); //HACEMOS UN "MODELO" ESCALADO
+	projectionShader.setMat4("model", model); //LE PASAMOS LOS DATOS DEL MODELO AL SHADER
+	projectionShader.setVec3("color", glm::vec3(0.5f, 0.7f, 1.0f)); //AQUI SE GENERA EL VECTOR EN RGB PARA PINTAR NUESTRO CUBO UNITARIO
+	glDrawArrays(GL_QUADS, 0, 24); //DIBUJAMOS EL CUBO ESCALADO
+	model = modelTemp;
+
+	//ANULAR PTE2
+	model = glm::translate(model, glm::vec3(0.15, 0, 0));
+	model = glm::rotate(model, glm::radians(-angPul), glm::vec3(0, 1, 0));
+	projectionShader.setMat4("model", model); //LE PASAMOS LOS DATOS DEL MODELO AL SHADER ANTES DEL CHECKPOINT
+	model = glm::translate(model, glm::vec3(0.15, 0, 0));
+	modelTemp = model;
+	model = glm::scale(model, glm::vec3(0.3, 0.24, 0.27)); //HACEMOS UN "MODELO" ESCALADO
+	projectionShader.setMat4("model", model); //LE PASAMOS LOS DATOS DEL MODELO AL SHADER
+	projectionShader.setVec3("color", glm::vec3(0.4f, 0.6f, 0.9f)); //AQUI SE GENERA EL VECTOR EN RGB PARA PINTAR NUESTRO CUBO UNITARIO
+	glDrawArrays(GL_QUADS, 0, 24); //DIBUJAMOS EL CUBO ESCALADO
+	model = modelTemp;
+
+	//ANULAR PTE3
+	model = glm::translate(model, glm::vec3(0.15, 0, 0));
+	model = glm::rotate(model, glm::radians(-angPul), glm::vec3(0, 1, 0));
+	projectionShader.setMat4("model", model); //LE PASAMOS LOS DATOS DEL MODELO AL SHADER ANTES DEL CHECKPOINT
+	model = glm::translate(model, glm::vec3(0.15, 0, 0));
+	modelTemp = model;
+	model = glm::scale(model, glm::vec3(0.3, 0.23, 0.24)); //HACEMOS UN "MODELO" ESCALADO
+	projectionShader.setMat4("model", model); //LE PASAMOS LOS DATOS DEL MODELO AL SHADER
+	projectionShader.setVec3("color", glm::vec3(0.3f, 0.5f, 0.8f)); //AQUI SE GENERA EL VECTOR EN RGB PARA PINTAR NUESTRO CUBO UNITARIO
+	glDrawArrays(GL_QUADS, 0, 24); //DIBUJAMOS EL CUBO ESCALADO
+	
+	model = modelTemp2; //REGRESAMOS A LA PALMA
+
+	//MEÑIQUE PTE1
+	model = glm::translate(model, glm::vec3(0.5, -0.38, 0));
+	model = glm::rotate(model, glm::radians(-angPul), glm::vec3(0, 1, 0));
+	projectionShader.setMat4("model", model); //LE PASAMOS LOS DATOS DEL MODELO AL SHADER ANTES DEL CHECKPOINT
+	model = glm::translate(model, glm::vec3(0.15, 0, 0));
+	modelTemp = model;
+	model = glm::scale(model, glm::vec3(0.3, 0.25, 0.3)); //HACEMOS UN "MODELO" ESCALADO
+	projectionShader.setMat4("model", model); //LE PASAMOS LOS DATOS DEL MODELO AL SHADER
+	projectionShader.setVec3("color", glm::vec3(0.7f, 1.0f, 0.3f)); //AQUI SE GENERA EL VECTOR EN RGB PARA PINTAR NUESTRO CUBO UNITARIO
+	glDrawArrays(GL_QUADS, 0, 24); //DIBUJAMOS EL CUBO ESCALADO
+	model = modelTemp;
+
+	//MEÑIQUE PTE2
+	model = glm::translate(model, glm::vec3(0.15, 0, 0));
+	model = glm::rotate(model, glm::radians(-angPul), glm::vec3(0, 1, 0));
+	projectionShader.setMat4("model", model); //LE PASAMOS LOS DATOS DEL MODELO AL SHADER ANTES DEL CHECKPOINT
+	model = glm::translate(model, glm::vec3(0.15, 0, 0));
+	modelTemp = model;
+	model = glm::scale(model, glm::vec3(0.3, 0.24, 0.27)); //HACEMOS UN "MODELO" ESCALADO
+	projectionShader.setMat4("model", model); //LE PASAMOS LOS DATOS DEL MODELO AL SHADER
+	projectionShader.setVec3("color", glm::vec3(0.6f, 0.9f, 0.2f)); //AQUI SE GENERA EL VECTOR EN RGB PARA PINTAR NUESTRO CUBO UNITARIO
+	glDrawArrays(GL_QUADS, 0, 24); //DIBUJAMOS EL CUBO ESCALADO
+	model = modelTemp;
+
+	//MEÑIQUE PTE3
+	model = glm::translate(model, glm::vec3(0.15, 0, 0));
+	model = glm::rotate(model, glm::radians(-angPul), glm::vec3(0, 1, 0));
+	projectionShader.setMat4("model", model); //LE PASAMOS LOS DATOS DEL MODELO AL SHADER ANTES DEL CHECKPOINT
+	model = glm::translate(model, glm::vec3(0.15, 0, 0));
+	modelTemp = model;
+	model = glm::scale(model, glm::vec3(0.3, 0.23, 0.24)); //HACEMOS UN "MODELO" ESCALADO
+	projectionShader.setMat4("model", model); //LE PASAMOS LOS DATOS DEL MODELO AL SHADER
+	projectionShader.setVec3("color", glm::vec3(0.5f, 0.8f, 0.1f)); //AQUI SE GENERA EL VECTOR EN RGB PARA PINTAR NUESTRO CUBO UNITARIO
+	glDrawArrays(GL_QUADS, 0, 24); //DIBUJAMOS EL CUBO ESCALADO
 
 	glBindVertexArray(0);
 }
