@@ -1,7 +1,20 @@
-/*--------------------------------------------------------------------*/
-/* ----------------------   Práctica 12 ------------------------------*/
-/*-------------------------    2019-2   ------------------------------*/
-/*------------- Alumno: Esparza Vázquez Luis Mauricio  ---------------*/
+/*-------------------------------------------------------------------*/
+/* ----------------------   Práctica 12  ----------------------------*/
+/*------------------------    2019-2   ------------------------------*/
+/*----------------------    Visual 2017   ---------------------------*/
+/*------------- Alumno: Esparza Vázquez Luis Mauricio ---------------*/
+
+/*
+Teclas:
+Movimiento de cámara: W A S D
+Movimiento de monito: Y G H J
+Movimiento de Pierna izquierda: X C
+Movimiento de Pierna derecha: N M
+Giro del monito: V B
+Movimiento del brazo izq: U I
+Movimiento del brazo der: K O
+Movimiento de la cabeza: E R
+*/
 //#define STB_IMAGE_IMPLEMENTATION
 #include <glew.h>
 #include <glfw3.h>
@@ -63,19 +76,20 @@ float	posX = 0.0f,
 		rotRodIzq = 0.0f,
 		giroMonito = 0.0f;
 
-//Trabajo en clase
-float	rotRodDer = 0.0f,
-		rotBrazIzq = 0.0f,
-		rotBrazDer = 0.0f,
-		rotCabeza = 0.0f;
 
-//#define MAX_FRAMES 9 //Número máximo de keyframes que vamos a tener; número arbitrario, ponemos las que necesitemos/queramos
-#define MAX_FRAMES 20 //Trabajo de clase fue cambiar las max frames a 20
-int i_max_steps = 190; //Límite de frames entre keyframes
-int i_curr_steps = 0; //Espacio de reproduccion entre frames
+//Clase
+float		rotRodDer = 0.0f,
+			rotBrazIzq = 0.0f,
+			rotBrazDer = 0.0f,
+			rotCabeza = 0.0f;
+
+
+#define MAX_FRAMES 20 //Máximo de frames que se guardan en un array para hacer la animacion por interpolacion
+int i_max_steps = 190; //Numero de pasos/frames que se realizan en las interpolaciones
+int i_curr_steps = 0; //Frames que hay entre cada animacion de la interpolacion (de espera)
 typedef struct _frame
 {
-	//Variables para GUARDAR Key Frames
+	//Variables para GUARDAR Key Frames para control
 	float posX;		//Variable para PosicionX
 	float posY;		//Variable para PosicionY
 	float posZ;		//Variable para PosicionZ
@@ -83,29 +97,30 @@ typedef struct _frame
 	float incY;		//Variable para IncrementoY
 	float incZ;		//Variable para IncrementoZ
 	float rotRodIzq;
-	float rotInc;
+	float rotIncRodIzq;
 	float giroMonito;
 	float giroMonitoInc;
-	//Trabajo en Clase
-	float rotRodDer;
-	float incRotRodDer;
-	float rotBrazIzq;
-	float incRotBrazIzq;
-	float rotBrazDer;
-	float incRotBrazDer;
-	float rotCabeza;
-	float incRotCabeza;
 
+
+	//Clase
+	float rotRodDer;
+	float rotIncRodDer;
+	float rotBrazIzq;
+	float rotIncBrazIzq;
+	float rotBrazDer;
+	float rotIncBrazDer;
+	float rotCabeza;
+	float rotCabezaInc;
 }FRAME;
 
-FRAME KeyFrame[MAX_FRAMES]; //array de nuestro tipo definido de tamaño que definimos para el numero maximo de keyframes
+FRAME KeyFrame[MAX_FRAMES];
 int FrameIndex = 0;			//introducir datos
 bool play = false;
 int playIndex = 0;
 
-void saveFrame(void) //Funcion para guardar keyframes
+void saveFrame(void)
 {
-	//Cuando se ejecuta, las posiciones actuales del 'monito' en pantalla que hayamos manipulado, se guardan en el índice del array anterior
+
 	printf("frameindex %d\n", FrameIndex);
 
 	KeyFrame[FrameIndex].posX = posX;
@@ -113,15 +128,13 @@ void saveFrame(void) //Funcion para guardar keyframes
 	KeyFrame[FrameIndex].posZ = posZ;
 
 	KeyFrame[FrameIndex].rotRodIzq = rotRodIzq;
+	KeyFrame[FrameIndex].rotRodDer = rotRodDer;
+	KeyFrame[FrameIndex].rotBrazIzq = rotBrazIzq;
+	KeyFrame[FrameIndex].rotBrazDer = rotBrazDer;
+	KeyFrame[FrameIndex].rotCabeza = rotCabeza;
 	KeyFrame[FrameIndex].giroMonito = giroMonito;
 
-	//Trabajo en Clase
-	KeyFrame[FrameIndex].rotRodDer = rotRodDer; //printf("rotacion rodilla der: %d\n");
-	KeyFrame[FrameIndex].rotBrazIzq = rotBrazIzq; //printf("rotacion izq der: %d\n");
-	KeyFrame[FrameIndex].rotBrazDer = rotBrazDer; //printf("rotacion brazo der: %d\n");
-	KeyFrame[FrameIndex].rotCabeza = rotCabeza; //printf("rotacion cabeza: %d\n");
-
-	FrameIndex++; //Se aumenta el indice para no sobreescribir
+	FrameIndex++;
 }
 
 void resetElements(void)
@@ -131,30 +144,30 @@ void resetElements(void)
 	posZ = KeyFrame[0].posZ;
 
 	rotRodIzq = KeyFrame[0].rotRodIzq;
-	giroMonito = KeyFrame[0].giroMonito;
-	//Trabajo en Clase
 	rotRodDer = KeyFrame[0].rotRodDer;
 	rotBrazIzq = KeyFrame[0].rotBrazIzq;
 	rotBrazDer = KeyFrame[0].rotBrazDer;
+
 	rotCabeza = KeyFrame[0].rotCabeza;
+	giroMonito = KeyFrame[0].giroMonito;
+
 }
 
 void interpolation(void)
 {
-	//Es como calcular un vector: PtoFinal - PuntoInicial, que está determinado por los keyframes en array
+
 	KeyFrame[playIndex].incX = (KeyFrame[playIndex + 1].posX - KeyFrame[playIndex].posX) / i_max_steps;
 	KeyFrame[playIndex].incY = (KeyFrame[playIndex + 1].posY - KeyFrame[playIndex].posY) / i_max_steps;
 	KeyFrame[playIndex].incZ = (KeyFrame[playIndex + 1].posZ - KeyFrame[playIndex].posZ) / i_max_steps;
 
-	KeyFrame[playIndex].rotInc = (KeyFrame[playIndex + 1].rotRodIzq - KeyFrame[playIndex].rotRodIzq) / i_max_steps;
+	KeyFrame[playIndex].rotIncRodIzq = (KeyFrame[playIndex + 1].rotRodIzq - KeyFrame[playIndex].rotRodIzq) / i_max_steps;
+	KeyFrame[playIndex].rotIncRodDer = (KeyFrame[playIndex + 1].rotRodDer - KeyFrame[playIndex].rotRodDer) / i_max_steps;
+	KeyFrame[playIndex].rotIncBrazIzq = (KeyFrame[playIndex + 1].rotBrazIzq - KeyFrame[playIndex].rotBrazIzq) / i_max_steps;
+	KeyFrame[playIndex].rotIncBrazDer = (KeyFrame[playIndex + 1].rotBrazDer - KeyFrame[playIndex].rotBrazDer) / i_max_steps;
+
+	KeyFrame[playIndex].rotCabezaInc = (KeyFrame[playIndex + 1].rotCabeza - KeyFrame[playIndex].rotCabeza) / i_max_steps;
 	KeyFrame[playIndex].giroMonitoInc = (KeyFrame[playIndex + 1].giroMonito - KeyFrame[playIndex].giroMonito) / i_max_steps;
-
-	//Trabajo en clase
-	KeyFrame[playIndex].incRotRodDer = (KeyFrame[playIndex + 1].rotRodDer - KeyFrame[playIndex].rotRodDer) / i_max_steps;
-	KeyFrame[playIndex].incRotBrazIzq = (KeyFrame[playIndex + 1].rotBrazIzq - KeyFrame[playIndex].rotBrazIzq) / i_max_steps;
-	KeyFrame[playIndex].incRotBrazDer = (KeyFrame[playIndex + 1].rotBrazDer - KeyFrame[playIndex].rotBrazDer) / i_max_steps;
-	KeyFrame[playIndex].incRotCabeza = (KeyFrame[playIndex + 1].rotCabeza - KeyFrame[playIndex].rotCabeza) / i_max_steps;
-
+	
 }
 
 
@@ -301,14 +314,13 @@ void animate(void)
 			posY += KeyFrame[playIndex].incY;
 			posZ += KeyFrame[playIndex].incZ;
 
-			rotRodIzq += KeyFrame[playIndex].rotInc;
-			giroMonito += KeyFrame[playIndex].giroMonitoInc;
+			rotRodIzq += KeyFrame[playIndex].rotIncRodIzq;
+			rotRodDer += KeyFrame[playIndex].rotIncRodDer;
+			rotBrazIzq += KeyFrame[playIndex].rotIncBrazIzq;
+			rotBrazDer += KeyFrame[playIndex].rotIncBrazDer;
 
-			//Trabajo en clase
-			rotBrazDer += KeyFrame[playIndex].incRotBrazDer;
-			rotBrazIzq += KeyFrame[playIndex].incRotBrazIzq;
-			rotRodDer += KeyFrame[playIndex].incRotRodDer;
-			rotCabeza += KeyFrame[playIndex].incRotCabeza;
+			rotCabeza += KeyFrame[playIndex].rotCabezaInc;
+			giroMonito += KeyFrame[playIndex].giroMonitoInc;
 
 			i_curr_steps++;
 		}
@@ -379,7 +391,7 @@ void display(Shader shader, Model botaDer, Model piernaDer, Model piernaIzq, Mod
 	model = glm::translate(tmp, glm::vec3(0.0f, - 1.0f, 0.0f));
 	model = glm::rotate(model, glm::radians(0.0f), glm::vec3(0.0f, 1.0f, 0.0f));
 	model = glm::translate(model, glm::vec3(-0.75f, 2.5f, 0));
-	model = glm::rotate(model, glm::radians(-rotBrazIzq), glm::vec3(1.0f, 0.0f, 0.0f));
+	model = glm::rotate(model, glm::radians(-rotBrazDer), glm::vec3(0.0f, 0.0f, 1.0f));
 	shader.setMat4("model", model);
 	brazoDer.Draw(shader);
 
@@ -387,12 +399,12 @@ void display(Shader shader, Model botaDer, Model piernaDer, Model piernaIzq, Mod
 	model = glm::translate(tmp, glm::vec3(0.0f, - 1.0f, 0.0f));
 	model = glm::rotate(model, glm::radians(0.0f), glm::vec3(0.0f, 1.0f, 0.0f));
 	model = glm::translate(model, glm::vec3(0.75f, 2.5f, 0));
-	model = glm::rotate(model, glm::radians(-rotBrazDer), glm::vec3(1.0f, 0.0f, 0.0f));
+	model = glm::rotate(model, glm::radians(-rotBrazIzq), glm::vec3(0.0f, 0.0f, 1.0f));
 	shader.setMat4("model", model);
 	brazoIzq.Draw(shader);
 
 	//Cabeza
-	model = glm::translate(tmp, glm::vec3(0.0f, - 1.0f, 0.0f));
+	model = glm::translate(tmp, glm::vec3(0.0f, -1.0f, 0.0f));
 	model = glm::rotate(model, glm::radians(0.0f), glm::vec3(0.0f, 1.0f, 0.0));
 	model = glm::translate(model, glm::vec3(0.0f, 2.5f, 0));
 	model = glm::rotate(model, glm::radians(-rotCabeza), glm::vec3(1.0f, 0.0f, 0.0f));
@@ -455,7 +467,7 @@ int main()
 	Model cabeza = ((char *)"Models/Personaje/cabeza.obj");
 	Model pisoModel = ((char *)"Models/piso/piso.obj");
 
-	//Inicialización de KeyFrames
+	//Inicialización de KeyFrames ----------- Modificación para guardar animación
 
 	for (int i = 0; i < MAX_FRAMES; i++)
 	{
@@ -464,11 +476,13 @@ int main()
 		KeyFrame[i].incY = 0;
 		KeyFrame[i].incZ = 0;
 		KeyFrame[i].rotRodIzq = 0;
-		KeyFrame[i].rotInc = 0;
-		KeyFrame[i].rotBrazDer = 0;
-		KeyFrame[i].rotBrazIzq = 0;
+		KeyFrame[i].rotIncRodIzq = 0;
 		KeyFrame[i].rotRodDer = 0;
-		KeyFrame[i].rotCabeza = 0;
+		KeyFrame[i].rotIncRodDer = 0;
+		KeyFrame[i].rotBrazIzq = 0;
+		KeyFrame[i].rotIncBrazIzq = 0;
+		KeyFrame[i].rotBrazDer = 0;
+		KeyFrame[i].rotIncBrazDer = 0;
 	}
 
     
@@ -519,7 +533,7 @@ void my_input(GLFWwindow *window, int key, int scancode, int action, int mode)
 {
 	if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS)
 		glfwSetWindowShouldClose(window, true);
-	//Posiciones de la Cámara
+	//Mov Cámara
 	if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS)
 		camera.ProcessKeyboard(FORWARD, (float)deltaTime);
 	if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS)
@@ -529,7 +543,7 @@ void my_input(GLFWwindow *window, int key, int scancode, int action, int mode)
 	if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS)
 		camera.ProcessKeyboard(RIGHT, (float)deltaTime);
 	//To Configure Model
-	//Posiciones del modelo con YHGJ
+	//Movimiento del modelo
 	if (glfwGetKey(window, GLFW_KEY_Y) == GLFW_PRESS)
 		posZ++;
 	if (glfwGetKey(window, GLFW_KEY_H) == GLFW_PRESS)
@@ -538,36 +552,42 @@ void my_input(GLFWwindow *window, int key, int scancode, int action, int mode)
 		posX--;
 	if (glfwGetKey(window, GLFW_KEY_J) == GLFW_PRESS)
 		posX++;
-	//X - Atrasa rodilla izq; C - Adelanta rodilla izq
+
+	//Pierna izquierda con X,C
 	if (glfwGetKey(window, GLFW_KEY_X) == GLFW_PRESS)
 		rotRodIzq--;
 	if (glfwGetKey(window, GLFW_KEY_C) == GLFW_PRESS)
 		rotRodIzq++;
-	//V , B - Girar modelo
-	if (glfwGetKey(window, GLFW_KEY_V) == GLFW_PRESS)
-		giroMonito--;
-	if (glfwGetKey(window, GLFW_KEY_B) == GLFW_PRESS)
-		giroMonito++;
-	//N, M - Girar rodilla derecha
+	//Pierna derecha con N, M
 	if (glfwGetKey(window, GLFW_KEY_N) == GLFW_PRESS)
 		rotRodDer--;
 	if (glfwGetKey(window, GLFW_KEY_M) == GLFW_PRESS)
 		rotRodDer++;
-	//I, O - Girar brazo izq
+
+	//Brazo Izquierdo con U, I
 	if (glfwGetKey(window, GLFW_KEY_U) == GLFW_PRESS)
 		rotBrazIzq--;
-	if (glfwGetKey(window, GLFW_KEY_I) == GLFW_PRESS)
+	if (glfwGetKey(window, GLFW_KEY_K) == GLFW_PRESS)
 		rotBrazIzq++;
-	//K, L - Girar brazo der
+
+	//Brazo derecho con K, O
 	if (glfwGetKey(window, GLFW_KEY_K) == GLFW_PRESS)
 		rotBrazDer--;
 	if (glfwGetKey(window, GLFW_KEY_O) == GLFW_PRESS)
 		rotBrazDer++;
-	//E, R - Girar cabeza
+
+	//Cabeza con E, R
 	if (glfwGetKey(window, GLFW_KEY_E) == GLFW_PRESS)
 		rotCabeza--;
 	if (glfwGetKey(window, GLFW_KEY_R) == GLFW_PRESS)
 		rotCabeza++;
+
+	//Rotación del modelo
+	if (glfwGetKey(window, GLFW_KEY_V) == GLFW_PRESS)
+		giroMonito--;
+	if (glfwGetKey(window, GLFW_KEY_B) == GLFW_PRESS)
+		giroMonito++;
+
 	
 	
 	//To play KeyFrame animation 
